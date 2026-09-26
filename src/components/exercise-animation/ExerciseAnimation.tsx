@@ -47,7 +47,7 @@ export function ExerciseAnimation({ exerciseId }: { exerciseId: string }) {
 
   useEffect(() => {
     const player = video.current;
-    if (player && (player.error || player.networkState === HTMLMediaElement.NETWORK_NO_SOURCE)) fallBackToIllustration();
+    if (player?.error) fallBackToIllustration();
   }, []);
 
   useEffect(() => {
