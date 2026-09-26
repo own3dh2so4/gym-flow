@@ -34,4 +34,4 @@ tools/animation-renders/render.sh bench-press render
 tools/animation-renders/queue.sh bench-press back-squat rdl
 ```
 
-Each exercise script in `exercises/` declares one pose per keyframe of its timeline. IK conventions for this rig: arm poles use `pole_angle=-90`, leg poles `90`. FK rotations on the left side (the right side is mirrored with `Scene.both`): trunk and head `X+` flex forward, upper arm `X+` raises forward and `Z+` abducts, forearm `X+` flexes the elbow, thigh `X+` flexes the hip, shin `X-` flexes the knee.
+Each exercise script in `exercises/` declares one pose per keyframe of its timeline. Hands have three bones per finger; `Scene.grip_bar` places a hand around a bar, handle or dumbbell with a grip style from `GRIP_STYLES`, and `Scene.hold` puts an object in a hand driven by FK or IK. IK conventions for this rig: arm poles use `pole_angle=-90`, leg poles `90`. FK rotations on the left side (the right side is mirrored with `Scene.both`): trunk and head `X+` flex forward, upper arm `X+` raises forward and `Z+` abducts, forearm `X+` flexes the elbow, thigh `X+` flexes the hip, shin `X-` flexes the knee.

@@ -24,19 +24,31 @@ SIDE_BONES = {
     "clavicle": ((0.02, -0.02, 1.41), (0.17, 0.0, 1.40)),
     "upperarm": ((0.17, 0.0, 1.40), (0.285, 0.015, 1.10)),
     "forearm": ((0.285, 0.015, 1.10), (0.377, -0.07, 0.88)),
-    "hand": ((0.377, -0.07, 0.88), (0.41, -0.105, 0.80)),
-    "fingers": ((0.41, -0.105, 0.80), (0.428, -0.11, 0.715)),
-    "thumb": ((0.372, -0.10, 0.862), (0.39, -0.178, 0.815)),
+    "hand": ((0.377, -0.07, 0.88), (0.423, -0.122, 0.7923)),
+    "forearm_twist": ((0.331, -0.0275, 0.99), (0.377, -0.07, 0.88)),
     "thigh": ((0.095, -0.01, 0.90), (0.135, -0.015, 0.49)),
     "shin": ((0.135, -0.015, 0.49), (0.165, 0.045, 0.085)),
     "foot": ((0.165, 0.045, 0.085), (0.19, -0.08, 0.025)),
     "toe": ((0.19, -0.08, 0.025), (0.20, -0.135, 0.02)),
 }
+FINGER_JOINTS = {
+    "index": ((0.414, -0.1287, 0.7999), (0.4166, -0.1473, 0.7738), (0.4184, -0.1598, 0.7565), (0.4198, -0.1701, 0.742)),
+    "middle": ((0.423, -0.122, 0.7923), (0.4276, -0.1323, 0.7587), (0.4307, -0.1392, 0.7363), (0.4333, -0.145, 0.7177)),
+    "ring": ((0.4136, -0.1006, 0.8016), (0.4206, -0.1055, 0.7614), (0.4253, -0.1088, 0.7346), (0.4292, -0.1115, 0.7123)),
+    "pinky": ((0.3983, -0.0665, 0.801), (0.4115, -0.0643, 0.7652), (0.4203, -0.0629, 0.7414), (0.4276, -0.0617, 0.7215)),
+    "thumb": ((0.372, -0.1, 0.862), (0.3683, -0.1301, 0.8572), (0.3691, -0.1558, 0.8281), (0.3697, -0.1769, 0.8042)),
+}
+PALM_NORMAL_LEFT = Vector((-1, 0, 0))
+for finger, joints in FINGER_JOINTS.items():
+    for index in range(3):
+        SIDE_BONES[f"{finger}{index + 1}"] = (joints[index], joints[index + 1])
 PARENTS = {
     "spine": "pelvis", "chest": "spine", "neck": "chest", "head": "neck",
-    "clavicle": "chest", "upperarm": "clavicle", "forearm": "upperarm", "hand": "forearm",
-    "fingers": "hand", "thumb": "hand", "thigh": "pelvis", "shin": "thigh", "foot": "shin", "toe": "foot",
+    "clavicle": "chest", "upperarm": "clavicle", "forearm": "upperarm", "hand": "forearm", "forearm_twist": "forearm",
+    "thigh": "pelvis", "shin": "thigh", "foot": "shin", "toe": "foot",
+    **{f"{finger}{index + 1}": ("hand" if index == 0 else f"{finger}{index}") for finger in FINGER_JOINTS for index in range(3)},
 }
+HAND_BONES = {"hand", *(f"{finger}{index + 1}" for finger in FINGER_JOINTS for index in range(3))}
 
 
 def isolate_body(scene):
@@ -83,8 +95,18 @@ def build_rig(scene):
             parent_name = parent if parent in CENTER_BONES else f"{parent}.{bone_name[-1]}"
             bones[bone_name].parent = bones[parent_name]
     for bone in bones:
-        bone.align_roll(Vector((0, -1, 0)) if abs(bone.vector.normalized().y) < 0.9 else Vector((0, 0, 1)))
+        base_name, _, side = bone.name.partition(".")
+        if base_name in HAND_BONES:
+            bone.align_roll(PALM_NORMAL_LEFT if side == "L" else -PALM_NORMAL_LEFT)
+        else:
+            bone.align_roll(Vector((0, -1, 0)) if abs(bone.vector.normalized().y) < 0.9 else Vector((0, 0, 1)))
     bpy.ops.object.mode_set(mode="OBJECT")
+    for side in ("L", "R"):
+        twist = rig.pose.bones[f"forearm_twist.{side}"].constraints.new("COPY_ROTATION")
+        twist.target, twist.subtarget = rig, f"hand.{side}"
+        twist.use_x = twist.use_z = False
+        twist.target_space = twist.owner_space = "LOCAL"
+        twist.influence = 0.5
     return rig
 
 
@@ -94,6 +116,13 @@ def bind(body, rig):
     rig.select_set(True)
     bpy.context.view_layer.objects.active = rig
     bpy.ops.object.parent_set(type="ARMATURE_AUTO")
+    armature = next(modifier for modifier in body.modifiers if modifier.type == "ARMATURE")
+    armature.use_deform_preserve_volume = True
+    smooth = body.modifiers.new("corrective", "CORRECTIVE_SMOOTH")
+    smooth.rest_source = "ORCO"
+    smooth.smooth_type = "LENGTH_WEIGHTED"
+    smooth.iterations = 6
+    smooth.factor = 0.5
     for name in EYES:
         eye = bpy.data.objects[name]
         world = eye.matrix_world.copy()
@@ -153,7 +182,7 @@ def studio(scene):
     background.inputs[1].default_value = 0.22
     scene.render.engine = "CYCLES"
     scene.cycles.device = "CPU"
-    scene.cycles.samples = 32
+    scene.cycles.samples = 48
     scene.cycles.use_denoising = True
     scene.render.use_persistent_data = True
     scene.render.film_transparent = True

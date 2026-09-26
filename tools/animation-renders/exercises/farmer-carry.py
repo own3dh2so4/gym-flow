@@ -10,7 +10,7 @@ s.hand_dumbbells()
 for side, sign in (("L", 1), ("R", -1)):
     s.ik("leg", side, (sign * 0.2, -1.2, 0.55))
 s.planted_feet()
-arms = {**s.both("upperarm", (0, 0, -14)), **s.both("forearm", (4, 0, 0)), **s.grip(hand=(0, 0, 0), fingers=(95, 0, 0))}
+arms = {**s.both("upperarm", (0, 0, -14)), **s.both("forearm", (4, 0, 0))}
 
 
 def step(front, back, lift, height):

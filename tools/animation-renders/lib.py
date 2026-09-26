@@ -10,12 +10,25 @@ from mathutils import Euler, Matrix, Quaternion, Vector
 HERE = os.path.dirname(os.path.abspath(__file__))
 WORK = os.environ["RENDER_WORK"]
 PUBLIC = os.path.join(HERE, "..", "..", "public", "animations")
-FPS = 15
+FPS = 24
 LEVELS = {"concentric": 1.0, "eccentric": 0.62, "isometric": 0.85}
 SKIN = (0.6, 0.58, 0.56, 1)
 PRIMARY_RED = (0.86, 0.1, 0.06, 1)
 SECONDARY_RED = (0.85, 0.35, 0.28, 1)
 SHORTS = (0.035, 0.037, 0.04, 1)
+
+
+GRIP_STYLES = {
+    "bar": {"radius": 0.015, "curl": (65, 90, 55), "thumb": ((35, 0, -75), (50, 0, 0), (45, 0, 0))},
+    "dumbbell": {"radius": 0.017, "curl": (60, 85, 50), "thumb": ((35, 0, -75), (45, 0, 0), (40, 0, 0))},
+    "handle": {"radius": 0.016, "curl": (62, 88, 52), "thumb": ((35, 0, -75), (48, 0, 0), (42, 0, 0))},
+    "rope": {"radius": 0.015, "curl": (70, 95, 60), "thumb": ((30, 0, -60), (40, 0, 0), (40, 0, 0))},
+    "flat": {"radius": 0.0, "curl": (-8, -4, 0), "thumb": ((0, 0, 25), (0, 0, 0), (0, 0, 0))},
+    "relaxed": {"radius": 0.0, "curl": (18, 28, 14), "thumb": ((10, 0, -15), (15, 0, 0), (10, 0, 0))},
+    "cup": {"radius": 0.03, "curl": (30, 40, 20), "thumb": ((20, 0, -35), (20, 0, 0), (15, 0, 0))},
+    "fist": {"radius": 0.0, "curl": (80, 95, 60), "thumb": ((40, 0, -70), (50, 0, 0), (40, 0, 0))},
+}
+FINGERS = ("index", "middle", "ring", "pinky")
 
 
 def mirror(rotation):
@@ -51,6 +64,9 @@ class Scene:
             "cable": material("cable", (0.08, 0.08, 0.08, 1), 0.4),
         }
         self.poses = []
+        self.hand_pose = {}
+        for side in ("L", "R"):
+            self.hand_pose.update(self.finger_pose(side, "relaxed"))
         self.foot_rest = {}
         self.targets = {}
         self.fk_bones = set()
@@ -204,6 +220,10 @@ class Scene:
         return holder
 
     def cable(self, start, end_object, radius=0.005):
+        start_object = start if isinstance(start, bpy.types.Object) else None
+        if start_object:
+            bpy.context.view_layer.update()
+            start = tuple(start_object.matrix_world.translation)
         curve = bpy.data.curves.new(f"cable_{end_object.name}", "CURVE")
         curve.dimensions = "3D"
         curve.bevel_depth = radius
@@ -214,7 +234,7 @@ class Scene:
         obj = bpy.data.objects.new(curve.name, curve)
         self.scene.collection.objects.link(obj)
         obj.data.materials.append(self.mats["cable"])
-        anchor = self.empty(f"{curve.name}_anchor", start)
+        anchor = start_object or self.empty(f"{curve.name}_anchor", start)
         bpy.context.view_layer.update()
         for index, target in ((0, anchor), (1, end_object)):
             hook = obj.modifiers.new(f"hook{index}", "HOOK")
@@ -224,6 +244,7 @@ class Scene:
         return obj
 
     def attach(self, obj, bone, location=None):
+        self.rig.data.pose_position = "REST"
         bpy.context.view_layer.update()
         world = obj.matrix_world.copy()
         if location is not None:
@@ -233,6 +254,8 @@ class Scene:
         obj.parent_bone = bone
         bpy.context.view_layer.update()
         obj.matrix_world = world
+        self.rig.data.pose_position = "POSE"
+        bpy.context.view_layer.update()
         return obj
 
     def ik(self, limb, side, pole, parent=None, pole_angle=None, pole_bone=None):
@@ -261,14 +284,36 @@ class Scene:
             copy.target = holder
             self.targets[f"footrot.{side}"] = holder
 
-    def hand_dumbbells(self, twist_axis="y"):
-        bells = {}
-        for side, sign in (("L", 1), ("R", -1)):
-            bell = self.dumbbell(f"db.{side}", axis=twist_axis)
-            bell.location = (sign * 0.388, -0.094, 0.832)
-            self.attach(bell, f"hand.{side}")
-            bells[side] = bell
-        return bells
+    def hand_dumbbells(self):
+        return {side: self.hold(self.dumbbell(f"db.{side}"), side, "dumbbell") for side in ("L", "R")}
+
+    def rope_end(self, name):
+        holder = self.empty(name)
+        self.cylinder((0, 0, 0), 0.012, 0.10, (0, 90, 0), "cable", holder, 16)
+        self.cylinder((0.06, 0, 0), 0.02, 0.03, (0, 90, 0), "dark", holder, 16)
+        self.empty(f"{name}.tip", (-0.05, 0, 0), holder)
+        self.moving.add(holder)
+        return holder
+
+    def stirrup(self, name):
+        holder = self.empty(name)
+        self.cylinder((0, 0, 0), 0.016, 0.11, (0, 90, 0), "dark", holder, 24)
+        apex = (0, -0.10, 0)
+        for sign in (1, -1):
+            start = Vector((sign * 0.062, 0, 0))
+            direction = Vector(apex) - start
+            side = self.cylinder(tuple((start + Vector(apex)) / 2), 0.006, direction.length, mat="steel", parent=holder, vertices=12)
+            side.rotation_mode = "QUATERNION"
+            side.rotation_quaternion = Vector((0, 0, 1)).rotation_difference(direction.normalized())
+        self.empty(f"{name}.tip", apex, holder)
+        self.moving.add(holder)
+        return holder
+
+    def handle(self, name, length=0.13):
+        holder = self.empty(name)
+        self.cylinder((0, 0, 0), 0.016, length, (0, 90, 0), "dark", holder, 24)
+        self.moving.add(holder)
+        return holder
 
     def standing_legs(self, width=0.165, pole_y=-1.2):
         for side, sign in (("L", 1), ("R", -1)):
@@ -293,18 +338,68 @@ class Scene:
         cable.data.materials[0] = self.mats["frame"]
         return cable
 
+    def finger_pose(self, side, style):
+        spec = GRIP_STYLES[style]
+        pose = {}
+        for finger in FINGERS:
+            for joint, angle in zip("123", spec["curl"]):
+                pose[f"{finger}{joint}.{side}"] = (angle, 0, 0)
+        for joint, rotation in zip("123", spec["thumb"]):
+            pose[f"thumb{joint}.{side}"] = rotation if side == "L" else mirror(rotation)
+        return pose
+
+    def rest_grip_frame(self, side, radius):
+        bones = self.rig.data.bones
+        index, pinky = bones[f"index1.{side}"].head_local, bones[f"pinky1.{side}"].head_local
+        middle = bones[f"middle1.{side}"]
+        axis = (pinky - index).normalized()
+        palm = Vector((-1, 0, 0)) if side == "L" else Vector((1, 0, 0))
+        finger = (middle.tail_local - middle.head_local).normalized()
+        origin = (index + pinky) / 2 + finger * 0.012 + palm * (radius + 0.004)
+        y = (-finger - axis * (-finger).dot(axis)).normalized()
+        z = axis.cross(y) if side == "L" else y.cross(axis)
+        frame = Matrix((axis, y, z)).transposed().to_4x4()
+        frame.translation = origin
+        return frame
+
+    def set_hand(self, side, style):
+        self.hand_pose.update(self.finger_pose(side, style))
+
+    def hold(self, obj, side, style="dumbbell"):
+        radius = GRIP_STYLES[style]["radius"]
+        obj.matrix_world = self.rig.matrix_world @ self.rest_grip_frame(side, radius)
+        self.attach(obj, f"hand.{side}")
+        self.moving.discard(obj)
+        self.set_hand(side, style)
+        return obj
+
+    def grip_bar(self, side, obj, point, wrist_dir, pole, style="bar", axis=None, pole_bone="chest"):
+        radius = GRIP_STYLES[style]["radius"]
+        x = Vector(axis if axis else ((1, 0, 0) if side == "L" else (-1, 0, 0))).normalized()
+        y = Vector(wrist_dir).normalized()
+        y = (y - x * y.dot(x)).normalized()
+        z = x.cross(y) if side == "L" else y.cross(x)
+        frame = Matrix((x, y, z)).transposed().to_4x4()
+        frame.translation = Vector(point)
+        rest_frame = self.rest_grip_frame(side, radius)
+        hand_rest = self.rig.data.bones[f"hand.{side}"].matrix_local
+        helper = self.ik("arm", side, pole, parent=obj, pole_bone=pole_bone)
+        helper.matrix_parent_inverse = Matrix.Identity(4)
+        helper.matrix_basis = frame @ rest_frame.inverted() @ hand_rest
+        copy = self.rig.pose.bones[f"hand.{side}"].constraints.new("COPY_ROTATION")
+        copy.target = helper
+        self.set_hand(side, style)
+        return helper
+
     def both(self, name, rotation):
         return {f"{name}.L": rotation, f"{name}.R": mirror(rotation)}
 
-    def grip(self, hand=(0, 90, 0), fingers=(100, 0, 0), thumb=(-60, 0, 0), sides=("L", "R")):
-        return {f"{name}.{side}": (rotation if side == "L" else mirror(rotation))
-                for side in sides for name, rotation in (("hand", hand), ("fingers", fingers), ("thumb", thumb))}
-
     def pose(self, index, pelvis=None, bones=None, targets=None, objects=None, foot_tilt=None):
         previous = self.poses[index - 1] if index > 0 else {"pelvis": None, "bones": {}, "targets": {}, "objects": {}, "foot_tilt": {}}
+        base_bones = self.hand_pose if index == 0 else {}
         state = {
             "pelvis": pelvis or previous["pelvis"],
-            "bones": {**previous["bones"], **(bones or {})},
+            "bones": {**base_bones, **previous["bones"], **(bones or {})},
             "targets": {**previous["targets"], **(targets or {})},
             "objects": {**previous["objects"], **(objects or {})},
             "foot_tilt": {**previous["foot_tilt"], **(foot_tilt or {})},
@@ -330,9 +425,13 @@ class Scene:
         for name, location in state["targets"].items():
             self.targets[name].location = location
             self.targets[name].keyframe_insert("location", frame=frame)
-        for obj, location in state["objects"].items():
+        for obj, value in state["objects"].items():
+            location, rotation = (value[0], value[1]) if isinstance(value[0], (tuple, list)) else (value, None)
             obj.location = location
             obj.keyframe_insert("location", frame=frame)
+            if rotation is not None:
+                obj.rotation_euler = [math.radians(a) for a in rotation]
+                obj.keyframe_insert("rotation_euler", frame=frame)
         for side, tilt in state["foot_tilt"].items():
             holder = self.targets[f"footrot.{side}"]
             holder.rotation_quaternion = Euler([math.radians(a) for a in tilt]).to_quaternion() @ self.foot_rest[side]
@@ -397,8 +496,20 @@ class Scene:
             for keyframe in self.timeline["keyframes"]:
                 starts.append(round((time + keyframe["hold"]) * FPS))
                 time += keyframe["hold"] + keyframe["duration"]
+            focus = os.environ.get("RENDER_FOCUS")
+            if os.environ.get("RENDER_PCT"):
+                self.scene.render.resolution_percentage = int(os.environ["RENDER_PCT"])
+                self.body.modifiers[0].render_levels = 3
+            camera, look = bpy.data.objects["cam"], bpy.data.objects["look"]
+            base_camera = camera.location.copy()
             for frame in frames or starts:
                 self.scene.frame_set(frame)
+                if focus:
+                    target = (self.rig.matrix_world @ self.rig.pose.bones[focus].head)
+                    look.location = target
+                    camera.location = target + (base_camera - target).normalized() * 0.55
+                    camera.data.lens = 55
+                    bpy.context.view_layer.update()
                 self.scene.render.filepath = os.path.join(folder, f"preview_{frame:04d}.png")
                 bpy.ops.render.render(write_still=True)
             print("PREVIEW_DONE", self.frames, "frames")

@@ -13,11 +13,11 @@ for x in (-0.55, 0.55):
     s.box((x, 1.60, 0.02), (0.10, 0.60, 0.04))
 bar = s.barbell()
 for side, sign in (("L", 1), ("R", -1)):
-    s.ik("arm", side, (sign * 0.75, 1.30, 0.20), parent=bar).location = (sign * 0.30, 0, -0.045)
+    s.grip_bar(side, bar, (sign * 0.30, 0, 0), (0, 0.1, -1), (sign * 0.75, 1.30, 0.20))
     s.ik("leg", side, (sign * 0.35, 0.40, 1.2)).location = (sign * 0.30, 0.60, 0.09)
 s.planted_feet()
 
 lying = ((0, 0.90, 0.57), (-90, 0, 0))
-s.pose(0, pelvis=lying, bones={**s.grip(), "head": (8, 0, 0)}, objects={bar: (0, 1.36, 1.14)})
-s.pose(1, objects={bar: (0, 1.20, 0.745)})
+s.pose(0, pelvis=lying, bones={"head": (8, 0, 0)}, objects={bar: (0, 1.36, 1.10)})
+s.pose(1, objects={bar: (0, 1.21, 0.735)})
 s.run()

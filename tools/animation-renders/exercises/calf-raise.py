@@ -10,8 +10,9 @@ s = Scene("calf-raise")
 s.camera((2.3, 2.1, 1.25), (0, -0.05, 0.75), 42)
 s.box((0, -0.10, 0.05), (0.6, 0.24, 0.10), "dark")
 for x in (-0.32, 0.32):
-    s.box((x, -0.45, 0.7), (0.05, 0.05, 1.4))
-s.box((0, -0.45, 1.1), (0.7, 0.04, 0.04))
+    s.box((x, -0.45, 0.6), (0.05, 0.05, 1.2))
+s.cylinder((0, -0.45, 1.1), 0.02, 0.7, (0, 90, 0))
+rail = s.empty("rail", (0, -0.45, 1.1))
 BALL = (0.19, -0.08, 0.025)
 VEC = (0.125, 0.06)
 
@@ -23,7 +24,7 @@ def ankle(sign, angle):
 
 
 for side, sign in (("L", 1), ("R", -1)):
-    s.ik("arm", side, (sign * 0.4, 0.3, 0.8), pole_bone="chest").location = (sign * 0.26, -0.43, 1.09)
+    s.grip_bar(side, rail, (sign * 0.24, 0, 0), (0, 1, -0.6), (sign * 0.4, 0.3, 0.8))
     s.ik("leg", side, (sign * 0.25, -1.2, 0.55))
 s.planted_feet()
 
@@ -37,6 +38,6 @@ def pose(angle):
     }
 
 
-s.pose(0, bones=s.grip(), **pose(-15))
+s.pose(0, **pose(-15))
 s.pose(1, **pose(35))
 s.run()

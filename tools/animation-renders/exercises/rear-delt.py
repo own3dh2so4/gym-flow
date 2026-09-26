@@ -12,10 +12,11 @@ s.box((0, -0.34, 0.8), (0.08, 0.08, 1.6))
 pivot = (0, -0.50, 1.62)
 s.box(pivot, (0.10, 0.10, 0.10), "dark")
 s.seated_legs(feet_y=-0.42)
+handles = {}
 for side, sign in (("L", 1), ("R", -1)):
-    target = s.ik("arm", side, (sign * 1.0, 0.6, 1.8), pole_bone="chest")
-    s.lever(pivot, target, 0.018)
-s.pose(0, pelvis=((0, 0.10, 0.60), (6, 0, 0)), bones=s.grip(hand=(0, 90, 0)),
-       targets={"hand.L": (0.07, -0.56, 1.38), "hand.R": (-0.07, -0.56, 1.38)})
-s.pose(1, targets={"hand.L": (0.74, -0.02, 1.38), "hand.R": (-0.74, -0.02, 1.38)})
+    handles[side] = s.handle(f"handle.{side}")
+    s.grip_bar(side, handles[side], (0, 0, 0), (0, 1, 0), (sign * 1.0, 0.6, 1.8), style="handle", axis=(1, 0, 0))
+    s.lever(pivot, handles[side], 0.018)
+s.pose(0, pelvis=((0, 0.10, 0.60), (6, 0, 0)), objects={handles["L"]: ((0.08, -0.62, 1.38), (0, 90, 0)), handles["R"]: ((-0.08, -0.62, 1.38), (0, 90, 0))})
+s.pose(1, objects={handles["L"]: ((0.80, -0.05, 1.38), (0, 90, 90)), handles["R"]: ((-0.80, -0.05, 1.38), (0, 90, -90))})
 s.run()

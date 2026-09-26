@@ -14,11 +14,9 @@ seat = s.box((0, 0, 0), (0.30, 0.30, 0.05), "pad")
 seat_holder = s.empty("seat")
 seat.parent = seat_holder
 s.moving.add(seat_holder)
-handle = s.empty("handle")
-s.moving.add(handle)
-s.box((0, 0, 0), (0.46, 0.03, 0.03), "dark", parent=handle)
+handle = s.handle("handle", 0.46)
 for side, sign in (("L", 1), ("R", -1)):
-    s.ik("arm", side, (sign * 0.35, 0.6, 0.3), parent=handle, pole_bone="chest").location = (sign * 0.14, 0.0, 0.0)
+    s.grip_bar(side, handle, (sign * 0.14, 0, 0), (0, 1, 0), (sign * 0.35, 0.6, 0.3))
     s.ik("leg", side, (sign * 0.3, -1.0, 1.4)).location = (sign * 0.14, -0.80, 0.32)
 s.planted_feet()
 s.cable((0, -1.05, 0.50), handle)
@@ -32,10 +30,10 @@ def pose(seat_y, lean, hands):
     }
 
 
-s.pose(0, bones={**s.grip(hand=(0, 0, 0)), "head": (-10, 0, 0)}, foot_tilt=feet, **pose(-0.40, 30, (0, -0.95, 0.60)))
-s.pose(1, **pose(-0.02, 30, (0, -0.60, 0.60)))
-s.pose(2, **pose(0.12, -25, (0, -0.40, 0.66)))
-s.pose(3, **pose(0.12, -25, (0, -0.10, 0.72)))
-s.pose(4, **pose(0.12, -25, (0, -0.40, 0.66)))
-s.pose(5, **pose(0.12, 30, (0, -0.72, 0.60)))
+s.pose(0, bones={"head": (-10, 0, 0)}, foot_tilt=feet, **pose(-0.40, 30, (0, -1.00, 0.62)))
+s.pose(1, **pose(-0.02, 30, (0, -0.66, 0.62)))
+s.pose(2, **pose(0.12, -25, (0, -0.46, 0.68)))
+s.pose(3, **pose(0.12, -25, (0, -0.16, 0.74)))
+s.pose(4, **pose(0.12, -25, (0, -0.46, 0.68)))
+s.pose(5, **pose(0.12, 30, (0, -0.78, 0.62)))
 s.run()
