@@ -1,0 +1,1010 @@
+{
+  "back-squat": {
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "adductors",
+      "erectors"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.5,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.2,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "goblet-squat": {
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "adductors",
+      "abs"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.4,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.8,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "leg-press": {
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "adductors"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.2,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "split-squat": {
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "adductors",
+      "hamstrings"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.2,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "leg-extension": {
+    "primary": [
+      "quads"
+    ],
+    "secondary": [],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 1,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "rdl": {
+    "primary": [
+      "hamstrings",
+      "glutes"
+    ],
+    "secondary": [
+      "erectors"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.4,
+        "duration": 3,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.8,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "hip-thrust": {
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [
+      "hamstrings"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 1.2,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 1.5,
+        "duration": 2,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "leg-curl": {
+    "primary": [
+      "hamstrings"
+    ],
+    "secondary": [
+      "calves"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.5,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "calf-raise": {
+    "primary": [
+      "calves"
+    ],
+    "secondary": [],
+    "keyframes": [
+      {
+        "hold": 1,
+        "duration": 1,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 1,
+        "duration": 2,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "bench-press": {
+    "primary": [
+      "pecs"
+    ],
+    "secondary": [
+      "triceps",
+      "frontDelt"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.2,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "incline-press": {
+    "primary": [
+      "pecs"
+    ],
+    "secondary": [
+      "frontDelt",
+      "triceps"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.2,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "chest-press": {
+    "primary": [
+      "pecs"
+    ],
+    "secondary": [
+      "triceps",
+      "frontDelt"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.3,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "cable-fly": {
+    "primary": [
+      "pecs"
+    ],
+    "secondary": [
+      "frontDelt"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 1,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "lat-pulldown": {
+    "primary": [
+      "lats"
+    ],
+    "secondary": [
+      "biceps",
+      "midBack"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.6,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "pull-up": {
+    "primary": [
+      "lats"
+    ],
+    "secondary": [
+      "biceps",
+      "midBack"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 1.4,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.4,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "cable-row": {
+    "primary": [
+      "midBack",
+      "lats"
+    ],
+    "secondary": [
+      "biceps"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 1.5,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 1,
+        "duration": 2,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "chest-row": {
+    "primary": [
+      "midBack",
+      "lats"
+    ],
+    "secondary": [
+      "rearDelt",
+      "biceps"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 1.4,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 1,
+        "duration": 2.2,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "face-pull": {
+    "primary": [
+      "rearDelt",
+      "midBack"
+    ],
+    "secondary": [
+      "traps"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 1.2,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 1,
+        "duration": 2,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "shoulder-press": {
+    "primary": [
+      "frontDelt",
+      "sideDelt"
+    ],
+    "secondary": [
+      "triceps"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.2,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.3,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "lateral-raise": {
+    "primary": [
+      "sideDelt"
+    ],
+    "secondary": [
+      "frontDelt"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.2,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.4,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "rear-delt": {
+    "primary": [
+      "rearDelt"
+    ],
+    "secondary": [
+      "midBack"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.2,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 1,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "triceps": {
+    "primary": [
+      "triceps"
+    ],
+    "secondary": [],
+    "keyframes": [
+      {
+        "hold": 0.2,
+        "duration": 1.2,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 1,
+        "duration": 2.2,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "biceps": {
+    "primary": [
+      "biceps"
+    ],
+    "secondary": [
+      "brachialis",
+      "forearm"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.2,
+        "duration": 1.2,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.5,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "hammer-curl": {
+    "primary": [
+      "brachialis",
+      "forearm"
+    ],
+    "secondary": [
+      "biceps"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.2,
+        "duration": 1.2,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.5,
+        "duration": 2.8,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "plank": {
+    "primary": [
+      "abs"
+    ],
+    "secondary": [
+      "obliques",
+      "glutes"
+    ],
+    "keyframes": [
+      {
+        "hold": 0,
+        "duration": 2.5,
+        "effort": "isometric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0,
+        "duration": 2.5,
+        "effort": "isometric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "dead-bug": {
+    "primary": [
+      "abs"
+    ],
+    "secondary": [
+      "obliques"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.4,
+        "duration": 2.5,
+        "effort": "isometric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.8,
+        "duration": 1.8,
+        "effort": "isometric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.4,
+        "duration": 2.5,
+        "effort": "isometric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.8,
+        "duration": 1.8,
+        "effort": "isometric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "pallof": {
+    "primary": [
+      "obliques",
+      "abs"
+    ],
+    "secondary": [],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 1.5,
+        "effort": "isometric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 2.5,
+        "duration": 1.5,
+        "effort": "isometric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "farmer-carry": {
+    "primary": [
+      "forearm",
+      "traps"
+    ],
+    "secondary": [
+      "abs",
+      "obliques"
+    ],
+    "keyframes": [
+      {
+        "hold": 0,
+        "duration": 0.35,
+        "effort": "isometric",
+        "ease": "linear",
+        "active": null
+      },
+      {
+        "hold": 0,
+        "duration": 0.35,
+        "effort": "isometric",
+        "ease": "linear",
+        "active": null
+      },
+      {
+        "hold": 0,
+        "duration": 0.35,
+        "effort": "isometric",
+        "ease": "linear",
+        "active": null
+      },
+      {
+        "hold": 0,
+        "duration": 0.35,
+        "effort": "isometric",
+        "ease": "linear",
+        "active": null
+      }
+    ]
+  },
+  "bike": {
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "calves"
+    ],
+    "keyframes": [
+      {
+        "hold": 0,
+        "duration": 0.15,
+        "effort": "concentric",
+        "ease": "linear",
+        "active": null
+      },
+      {
+        "hold": 0,
+        "duration": 0.15,
+        "effort": "concentric",
+        "ease": "linear",
+        "active": null
+      },
+      {
+        "hold": 0,
+        "duration": 0.15,
+        "effort": "concentric",
+        "ease": "linear",
+        "active": null
+      },
+      {
+        "hold": 0,
+        "duration": 0.15,
+        "effort": "concentric",
+        "ease": "linear",
+        "active": null
+      },
+      {
+        "hold": 0,
+        "duration": 0.15,
+        "effort": "eccentric",
+        "ease": "linear",
+        "active": null
+      },
+      {
+        "hold": 0,
+        "duration": 0.15,
+        "effort": "eccentric",
+        "ease": "linear",
+        "active": null
+      },
+      {
+        "hold": 0,
+        "duration": 0.15,
+        "effort": "eccentric",
+        "ease": "linear",
+        "active": null
+      },
+      {
+        "hold": 0,
+        "duration": 0.15,
+        "effort": "eccentric",
+        "ease": "linear",
+        "active": null
+      }
+    ]
+  },
+  "rower": {
+    "primary": [
+      "quads",
+      "glutes",
+      "lats",
+      "midBack"
+    ],
+    "secondary": [
+      "biceps",
+      "hamstrings"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.2,
+        "duration": 0.45,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": [
+          "quads",
+          "glutes"
+        ]
+      },
+      {
+        "hold": 0,
+        "duration": 0.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": [
+          "glutes",
+          "lats"
+        ]
+      },
+      {
+        "hold": 0,
+        "duration": 0.35,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": [
+          "lats",
+          "midBack"
+        ]
+      },
+      {
+        "hold": 0.25,
+        "duration": 0.35,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": []
+      },
+      {
+        "hold": 0,
+        "duration": 0.35,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": []
+      },
+      {
+        "hold": 0,
+        "duration": 1.1,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": []
+      }
+    ]
+  },
+  "deadlift": {
+    "primary": [
+      "glutes",
+      "hamstrings"
+    ],
+    "secondary": [
+      "erectors",
+      "quads"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.5,
+        "duration": 1.5,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.4,
+        "duration": 2.2,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "reverse-lunge": {
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "hamstrings",
+      "adductors"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.4,
+        "duration": 1,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0,
+        "duration": 1.6,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.2,
+        "duration": 1.4,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "push-up": {
+    "primary": [
+      "pecs"
+    ],
+    "secondary": [
+      "triceps",
+      "frontDelt",
+      "abs"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.2,
+        "duration": 2,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.2,
+        "duration": 1.2,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "hip-abduction": {
+    "primary": [
+      "abductors"
+    ],
+    "secondary": [
+      "glutes"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.2,
+        "duration": 1.2,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 1,
+        "duration": 2.4,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "one-arm-row": {
+    "primary": [
+      "midBack",
+      "lats"
+    ],
+    "secondary": [
+      "biceps",
+      "rearDelt"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.8,
+        "duration": 2.2,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  },
+  "hanging-knee-raise": {
+    "primary": [
+      "abs"
+    ],
+    "secondary": [
+      "obliques",
+      "forearm"
+    ],
+    "keyframes": [
+      {
+        "hold": 0.3,
+        "duration": 1.3,
+        "effort": "concentric",
+        "ease": "inOut",
+        "active": null
+      },
+      {
+        "hold": 0.5,
+        "duration": 2.2,
+        "effort": "eccentric",
+        "ease": "inOut",
+        "active": null
+      }
+    ]
+  }
+}

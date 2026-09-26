@@ -9,4 +9,5 @@ export default withPWA({
   disable: process.env.NODE_ENV === "development",
   register: true,
   skipWaiting: true,
+  publicExcludes: ["!noprecache/**/*", "!animations/**/*.mp4"],
 })(nextConfig);

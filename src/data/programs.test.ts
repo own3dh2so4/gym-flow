@@ -39,4 +39,11 @@ describe("monthly programs", () => {
       });
     });
   });
+
+  it("offers a substitution that is a different exercise", () => {
+    exercises.forEach((exercise) => {
+      expect(exercise.substitution.length, exercise.id).toBeGreaterThan(0);
+      expect(exercise.substitution, exercise.id).not.toBe(exercise.name);
+    });
+  });
 });

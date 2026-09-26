@@ -106,6 +106,32 @@ const conditioningB: ExerciseSpec[] = [
   ["rower", 1, "10 min: 40 s suave / 20 s vivo", "—"],
 ];
 
+const swap = (specs: ExerciseSpec[], replacements: Record<string, ExerciseSpec>, extra: ExerciseSpec[] = []): ExerciseSpec[] => [
+  ...specs.map((spec) => replacements[spec[0]] ?? spec),
+  ...extra,
+];
+
+const deadliftStrength: ExerciseSpec = ["deadlift", 3, "5–6", "150 s"];
+const hipAbduction: ExerciseSpec = ["hip-abduction", 2, "12–15", "60 s"];
+
+const fullAPush = swap(fullA, { "chest-press": ["push-up", 3, "8–15", "90 s"] });
+const fullBHips = swap(fullB, {}, [hipAbduction]);
+const fullCVariant = swap(fullC, {
+  "split-squat": ["reverse-lunge", 3, "8–10/lado", "90 s"],
+  "chest-row": ["one-arm-row", 3, "8–12/lado", "75 s"],
+});
+const fullCCore = swap(fullCVariant, { pallof: ["hanging-knee-raise", 3, "8–12", "60 s"] });
+const pushCore = swap(push, { plank: ["hanging-knee-raise", 3, "8–12", "60 s"] });
+const upperBVariant = swap(upperB, { "chest-row": ["one-arm-row", 3, "8–12/lado", "75 s"] });
+const lowerBVariant = swap(lowerB, {
+  "split-squat": ["reverse-lunge", 3, "8–10/lado", "90 s"],
+  "dead-bug": ["hanging-knee-raise", 3, "8–12", "60 s"],
+}, [hipAbduction]);
+const lowerAStrength = swap(lowerA, { rdl: deadliftStrength });
+const lowerBHips = swap(lowerB, {}, [hipAbduction]);
+const conditioningAPush = swap(conditioningA, { "chest-press": ["push-up", 3, "10–15", "60 s"] });
+const conditioningBLunge = swap(conditioningB, { "split-squat": ["reverse-lunge", 3, "10/lado", "60 s"] });
+
 const program = (
   month: number,
   name: string,
@@ -132,15 +158,15 @@ const program = (
 export const monthlyPrograms: MonthlyProgram[] = [
   program(1, "Base sólida", "Vuelve a moverte bien", "Full body", "coral", "Tres sesiones globales para recuperar técnica, tolerancia y constancia.", "Base técnica y acondicionamiento general", [["Base", "Piernas + empuje", 60, fullA], ["Equilibrio", "Cadena posterior + tracción", 60, fullB], ["Control", "Unilateral + hombros", 60, fullC]]),
   program(2, "Torso / pierna", "Construye frecuencia", "Torso / pierna", "lime", "Cuatro días para estimular cada gran grupo muscular dos veces por semana.", "Fuerza general e hipertrofia moderada", [["Torso A", "Pecho + espalda", 65, upperA], ["Pierna A", "Sentadilla + bisagra", 60, lowerA], ["Torso B", "Espalda + hombros", 65, upperB], ["Pierna B", "Glúteos + unilateral", 60, lowerB]]),
-  program(3, "Alternancia A / B", "Simple y efectivo", "A / B", "sky", "Tres días globales alternando patrones para progresar sin acumular fatiga innecesaria.", "Dominio de movimientos básicos", [["A", "Fuerza global", 60, fullA], ["B", "Estabilidad global", 60, fullB], ["A+", "Volumen equilibrado", 60, fullC]]),
-  program(4, "Empuja y tira", "Más trabajo, mejor repartido", "Push / pull / legs", "coral", "Un PPL adaptado con cuarto día global para repetir todos los grupos principales.", "Hipertrofia equilibrada", [["Push", "Pecho + hombros + tríceps", 60, push], ["Pull", "Espalda + bíceps", 60, pull], ["Legs", "Pierna completa", 65, legs], ["Full", "Segundo estímulo global", 60, fullB]]),
-  program(5, "Fuerza útil", "Hazte fuerte sin perder control", "Fuerza", "lime", "Compuestos con descansos amplios y accesorios suficientes para mantener equilibrio articular.", "Mejorar fuerza en rangos moderados", [["Fuerza A", "Sentadilla + press", 65, fullA.map((item, index) => index < 4 ? [item[0], 3, "6–8", "120 s"] : item)], ["Fuerza B", "Bisagra + tracción", 65, fullB.map((item, index) => index < 4 ? [item[0], 3, "6–8", "120 s"] : item)], ["Fuerza C", "Unilateral + estabilidad", 60, fullC]]),
+  program(3, "Alternancia A / B", "Simple y efectivo", "A / B", "sky", "Tres días globales alternando patrones para progresar sin acumular fatiga innecesaria.", "Dominio de movimientos básicos", [["A", "Fuerza global", 60, fullA], ["B", "Estabilidad global", 60, fullB], ["A+", "Volumen equilibrado", 60, fullCCore]]),
+  program(4, "Empuja y tira", "Más trabajo, mejor repartido", "Push / pull / legs", "coral", "Un PPL adaptado con cuarto día global para repetir todos los grupos principales.", "Hipertrofia equilibrada", [["Push", "Pecho + hombros + tríceps", 60, pushCore], ["Pull", "Espalda + bíceps", 60, pull], ["Legs", "Pierna completa", 65, legs], ["Full", "Segundo estímulo global", 60, fullB]]),
+  program(5, "Fuerza útil", "Hazte fuerte sin perder control", "Fuerza", "lime", "Compuestos con descansos amplios y accesorios suficientes para mantener equilibrio articular.", "Mejorar fuerza en rangos moderados", [["Fuerza A", "Sentadilla + press", 65, fullA.map((item, index) => index < 4 ? [item[0], 3, "6–8", "120 s"] : item)], ["Fuerza B", "Bisagra + tracción", 65, fullB.map((item, index) => index === 0 ? deadliftStrength : index < 4 ? [item[0], 3, "6–8", "120 s"] : item)], ["Fuerza C", "Unilateral + estabilidad", 60, fullC]]),
   program(6, "Volumen sostenible", "Suma sin agotarte", "Hipertrofia", "sky", "Cuatro sesiones de volumen moderado, lejos del fallo y con buena recuperación.", "Acumular unas 8–12 series semanales por grupo principal", [["Torso A", "Empuje horizontal", 65, upperA], ["Pierna A", "Dominante de rodilla", 60, lowerA], ["Torso B", "Tracción y hombro", 65, upperB], ["Pierna B", "Cadena posterior", 60, lowerB]]),
-  program(7, "Full body atlético", "Muévete con energía", "Full body", "coral", "Fuerza de cuerpo completo combinada con trabajo cardiovascular breve y controlado.", "Condición física general", [["Potencia base", "Cuerpo completo", 60, [...fullA.slice(0, 6), ["bike", 1, "8 min moderados", "—"]]], ["Capacidad", "Cuerpo completo", 60, conditioningB], ["Resistencia", "Cuerpo completo", 60, conditioningA]]),
-  program(8, "Torso / pierna 2.0", "Consolida tus marcas", "Torso / pierna", "lime", "Una segunda exposición al split con variantes para evitar estancamiento.", "Progresar cargas manteniendo la técnica", [["Torso mixto", "Pecho + espalda", 65, upperB], ["Pierna posterior", "Glúteos + isquios", 60, lowerB], ["Torso completo", "Espalda + empuje", 65, upperA], ["Pierna completa", "Cuádriceps + core", 60, lowerA]]),
-  program(9, "Fuerza equilibrada", "Fuerte de arriba abajo", "Torso / pierna", "sky", "Cuatro días completos con ocho ejercicios de torso y siete de pierna para progresar todo el mes.", "Fuerza e hipertrofia con frecuencia dos", [["Torso fuerte", "Pecho + espalda + brazos", 70, upperA], ["Pierna fuerte", "Sentadilla + cadena posterior", 65, lowerA], ["Torso volumen", "Espalda + hombros + pecho", 70, upperB], ["Pierna volumen", "Glúteos + cuádriceps + core", 65, lowerB]]),
-  program(10, "A / B progresivo", "Menos días, máxima cobertura", "A / B", "coral", "Tres sesiones amplias que cubren todos los patrones y encajan en semanas ocupadas.", "Mantener fuerza y masa muscular", [["A", "Rodilla + empuje", 60, fullA], ["B", "Cadera + tracción", 60, fullB], ["C", "Unilateral + estabilidad", 60, fullC]]),
-  program(11, "Fuerza-resistencia", "Trabaja y respira", "Fuerza-resistencia", "lime", "Descansos moderados, rangos amplios y cardio breve sin convertir la técnica en una carrera.", "Capacidad de trabajo y salud cardiovascular", [["Circuito controlado A", "Global + bicicleta", 60, conditioningA], ["Circuito controlado B", "Global + remo", 60, conditioningB], ["Fuerza de apoyo", "Compuestos y core", 60, fullC]]),
+  program(7, "Full body atlético", "Muévete con energía", "Full body", "coral", "Fuerza de cuerpo completo combinada con trabajo cardiovascular breve y controlado.", "Condición física general", [["Potencia base", "Cuerpo completo", 60, [...fullA.slice(0, 6), ["bike", 1, "8 min moderados", "—"]]], ["Capacidad", "Cuerpo completo", 60, conditioningB], ["Resistencia", "Cuerpo completo", 60, conditioningAPush]]),
+  program(8, "Torso / pierna 2.0", "Consolida tus marcas", "Torso / pierna", "lime", "Una segunda exposición al split con variantes para evitar estancamiento.", "Progresar cargas manteniendo la técnica", [["Torso mixto", "Pecho + espalda", 65, upperBVariant], ["Pierna posterior", "Glúteos + isquios", 60, lowerBVariant], ["Torso completo", "Espalda + empuje", 65, upperA], ["Pierna completa", "Cuádriceps + core", 60, lowerA]]),
+  program(9, "Fuerza equilibrada", "Fuerte de arriba abajo", "Torso / pierna", "sky", "Cuatro días completos con ocho ejercicios de torso y siete de pierna para progresar todo el mes.", "Fuerza e hipertrofia con frecuencia dos", [["Torso fuerte", "Pecho + espalda + brazos", 70, upperA], ["Pierna fuerte", "Sentadilla + peso muerto", 65, lowerAStrength], ["Torso volumen", "Espalda + hombros + pecho", 70, upperB], ["Pierna volumen", "Glúteos + cuádriceps + core", 65, lowerBHips]]),
+  program(10, "A / B progresivo", "Menos días, máxima cobertura", "A / B", "coral", "Tres sesiones amplias que cubren todos los patrones y encajan en semanas ocupadas.", "Mantener fuerza y masa muscular", [["A", "Rodilla + empuje", 60, fullAPush], ["B", "Cadera + tracción", 60, fullBHips], ["C", "Unilateral + estabilidad", 60, fullCVariant]]),
+  program(11, "Fuerza-resistencia", "Trabaja y respira", "Fuerza-resistencia", "lime", "Descansos moderados, rangos amplios y cardio breve sin convertir la técnica en una carrera.", "Capacidad de trabajo y salud cardiovascular", [["Circuito controlado A", "Global + bicicleta", 60, conditioningAPush], ["Circuito controlado B", "Global + remo", 60, conditioningBLunge], ["Fuerza de apoyo", "Compuestos y core", 60, fullC]]),
   program(12, "Cierre del ciclo", "Mide cuánto has avanzado", "Full body", "sky", "Repite patrones conocidos, registra cargas limpias y termina el año con una descarga real.", "Consolidación y revisión de progreso", [["Referencia A", "Repite tus básicos", 60, fullA], ["Referencia B", "Repite tus variantes", 60, fullB], ["Referencia C", "Equilibrio final", 60, fullC]]),
 ];
 
