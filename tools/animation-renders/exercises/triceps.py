@@ -18,5 +18,5 @@ for side in ("L", "R"):
     s.cable(rope, bpy.data.objects[f"rope.{side}.tip"], 0.011)
 s.cable((0, -0.48, 2.2), rope)
 s.pose(0, pelvis=((0, 0.03, 0.89), (10, 0, 0)), targets={"hand.L": (0.07, -0.30, 1.22), "hand.R": (-0.07, -0.30, 1.22), "rope": (0, -0.33, 1.30)})
-s.pose(1, targets={"hand.L": (0.13, -0.22, 0.80), "hand.R": (-0.13, -0.22, 0.80), "rope": (0, -0.24, 0.92)})
+s.pose(1, targets={"hand.L": (0.13, -0.18, 0.84), "hand.R": (-0.13, -0.18, 0.84), "rope": (0, -0.21, 0.96)})
 s.run()

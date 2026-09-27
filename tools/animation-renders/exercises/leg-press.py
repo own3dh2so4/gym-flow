@@ -22,6 +22,6 @@ for side, sign in (("L", 1), ("R", -1)):
 s.planted_feet()
 reclined = ((0, 0.14, 0.58), (-42, 0, 0))
 tilt = {"L": (-45, 0, 0), "R": (-45, 0, 0)}
-s.pose(0, pelvis=reclined, bones={"head": (22, 0, 0)}, objects={sled: (0, -0.66, 1.00)}, foot_tilt=tilt)
+s.pose(0, pelvis=reclined, bones={"head": (22, 0, 0)}, objects={sled: (0, -0.645, 0.985)}, foot_tilt=tilt)
 s.pose(1, objects={sled: (0, -0.38, 0.72)})
 s.run()

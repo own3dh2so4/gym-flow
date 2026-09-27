@@ -394,7 +394,7 @@ class Scene:
     def both(self, name, rotation):
         return {f"{name}.L": rotation, f"{name}.R": mirror(rotation)}
 
-    def pose(self, index, pelvis=None, bones=None, targets=None, objects=None, foot_tilt=None):
+    def pose(self, index, pelvis=None, bones=None, targets=None, objects=None, foot_tilt=None, via=None):
         previous = self.poses[index - 1] if index > 0 else {"pelvis": None, "bones": {}, "targets": {}, "objects": {}, "foot_tilt": {}}
         base_bones = self.hand_pose if index == 0 else {}
         state = {
@@ -403,8 +403,31 @@ class Scene:
             "targets": {**previous["targets"], **(targets or {})},
             "objects": {**previous["objects"], **(objects or {})},
             "foot_tilt": {**previous["foot_tilt"], **(foot_tilt or {})},
+            "via": via,
         }
         self.poses.append(state)
+
+    def _midway(self, start, end, via):
+        mix = lambda a, b: tuple((x + y) / 2 for x, y in zip(a, b))
+        state = {
+            "pelvis": (mix(start["pelvis"][0], end["pelvis"][0]), mix(start["pelvis"][1], end["pelvis"][1])),
+            "bones": {k: mix(v, end["bones"].get(k, v)) for k, v in start["bones"].items()},
+            "targets": {k: mix(v, end["targets"].get(k, v)) for k, v in start["targets"].items()},
+            "objects": {},
+            "foot_tilt": {k: mix(v, end["foot_tilt"].get(k, v)) for k, v in start["foot_tilt"].items()},
+        }
+        for obj, value in start["objects"].items():
+            other = end["objects"].get(obj, value)
+            if isinstance(value[0], (tuple, list)):
+                state["objects"][obj] = (mix(value[0], other[0]), mix(value[1], other[1]))
+            else:
+                state["objects"][obj] = mix(value, other)
+        for key in ("pelvis",):
+            if key in via:
+                state[key] = via[key]
+        for key in ("bones", "targets", "objects", "foot_tilt"):
+            state[key].update(via.get(key, {}))
+        return state
 
     def _apply(self, state, frame):
         location, rotation = state["pelvis"]
@@ -460,6 +483,10 @@ class Scene:
                 self._apply(self.poses[index], (time + keyframe["hold"]) * FPS)
                 self._key_levels((time + keyframe["hold"]) * FPS, held, keyframe["active"])
             move_start = (time + keyframe["hold"]) * FPS
+            via = self.poses[index]["via"]
+            if via:
+                following = self.poses[(index + 1) % len(self.poses)]
+                self._apply(self._midway(self.poses[index], following, via), move_start + keyframe["duration"] * FPS / 2)
             self._key_levels(move_start + keyframe["duration"] * FPS / 3, LEVELS[keyframe["effort"]], keyframe["active"])
             if keyframe["ease"] == "linear":
                 linear_frames.append(move_start)

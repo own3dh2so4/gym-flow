@@ -16,5 +16,5 @@ for side, sign in (("L", 1), ("R", -1)):
 s.planted_feet()
 s.cable((1.12, -0.25, 1.22), handle)
 s.pose(0, pelvis=((0, 0.02, 0.84), (4, 0, 0)), objects={handle: (0, -0.26, 1.20)})
-s.pose(1, objects={handle: (0, -0.66, 1.22)})
+s.pose(1, objects={handle: (0, -0.61, 1.22)})
 s.run()

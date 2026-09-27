@@ -10,7 +10,7 @@ s.box((0, 0.2, 0.01), (0.9, 2.0, 0.02), "dark", bevel=0.2)
 for side, sign in (("L", 1), ("R", -1)):
     s.ik("arm", side, (sign * 0.3, -0.35, -0.6)).location = (sign * 0.08, -0.66, 0.05)
     s.set_hand(side, "fist")
-    s.ik("leg", side, (sign * 0.3, 0.8, -0.8)).location = (sign * 0.12, 0.90, 0.12)
+    s.ik("leg", side, (sign * 0.3, 0.8, -0.8)).location = (sign * 0.12, 0.88, 0.12)
 s.planted_feet()
 prone = (78, 0, 0)
 toes = {"L": (-70, 0, 0), "R": (-70, 0, 0)}

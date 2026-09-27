@@ -15,6 +15,6 @@ for side, sign in (("L", 1), ("R", -1)):
     s.grip_bar(side, bells[side], (0, 0, 0), (0, 0, 1), (sign * 0.5, 0.6, 1.6), style="dumbbell", axis=(sign * 1, 0, 0))
     s.ik("leg", side, (sign * 0.25, -1.2, 0.55)).location = (sign * 0.17, 0.40, 0.085)
 s.planted_feet()
-s.pose(0, pelvis=((0, 0.30, 0.86), (48, 0, 0)), bones={"head": (-20, 0, 0)}, objects={bells["L"]: (0.22, -0.43, 0.38), bells["R"]: (-0.22, -0.43, 0.38)})
+s.pose(0, pelvis=((0, 0.30, 0.86), (48, 0, 0)), bones={"head": (-20, 0, 0)}, objects={bells["L"]: (0.22, -0.16, 0.57), bells["R"]: (-0.22, -0.16, 0.57)})
 s.pose(1, objects={bells["L"]: (0.24, -0.12, 0.73), bells["R"]: (-0.24, -0.12, 0.73)})
 s.run()

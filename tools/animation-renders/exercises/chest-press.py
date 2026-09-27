@@ -19,5 +19,5 @@ for side, sign in (("L", 1), ("R", -1)):
     s.lever((sign * 0.60, 0.25, 1.85), top, 0.02)
 seated = ((0, 0.05, 0.55), (-4, 0, 0))
 s.pose(0, pelvis=seated, objects={handles["L"]: (0.24, -0.24, 1.10), handles["R"]: (-0.24, -0.24, 1.10)})
-s.pose(1, objects={handles["L"]: (0.19, -0.66, 1.10), handles["R"]: (-0.19, -0.66, 1.10)})
+s.pose(1, objects={handles["L"]: (0.20, -0.58, 1.10), handles["R"]: (-0.20, -0.58, 1.10)})
 s.run()
