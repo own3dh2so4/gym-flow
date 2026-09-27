@@ -502,6 +502,26 @@ class Scene:
                     point.handle_left_type = point.handle_right_type = "AUTO_CLAMPED"
         self.frames = round(time * FPS)
         self.scene.frame_start, self.scene.frame_end = 0, self.frames - 1
+        self._scapular_rhythm()
+
+    def _scapular_rhythm(self, step=3):
+        rig = self.rig
+        frames = list(range(0, self.frames + 1, step))
+        elevations = {"L": [], "R": []}
+        for frame in frames:
+            self.scene.frame_set(frame)
+            chest = rig.matrix_world.to_3x3() @ rig.pose.bones["chest"].matrix.to_3x3()
+            down = -chest.col[1]
+            for side in ("L", "R"):
+                arm = (rig.matrix_world.to_3x3() @ rig.pose.bones[f"upperarm.{side}"].matrix.to_3x3()).col[1]
+                elevations[side].append(math.degrees(down.angle(arm)))
+        for side, sign in (("L", 1), ("R", -1)):
+            bone = rig.pose.bones[f"clavicle.{side}"]
+            bone.rotation_mode = "XYZ"
+            for frame, elevation in zip(frames, elevations[side]):
+                lift = min(28.0, max(0.0, (elevation - 55.0) * 0.3))
+                bone.rotation_euler = (0, 0, math.radians(lift) * sign)
+                bone.keyframe_insert("rotation_euler", frame=frame)
 
     def run(self):
         self.animate()

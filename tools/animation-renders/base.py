@@ -100,8 +100,18 @@ def build_rig(scene):
             bone.align_roll(PALM_NORMAL_LEFT if side == "L" else -PALM_NORMAL_LEFT)
         else:
             bone.align_roll(Vector((0, -1, 0)) if abs(bone.vector.normalized().y) < 0.9 else Vector((0, 0, 1)))
+    for suffix in ("L", "R"):
+        upperarm = bones[f"upperarm.{suffix}"]
+        helper = bones.new(f"shoulder.{suffix}")
+        helper.head = upperarm.head
+        helper.tail = upperarm.head + (upperarm.tail - upperarm.head).normalized() * 0.12
+        helper.roll = upperarm.roll
+        helper.parent = bones[f"clavicle.{suffix}"]
     bpy.ops.object.mode_set(mode="OBJECT")
     for side in ("L", "R"):
+        track = rig.pose.bones[f"shoulder.{side}"].constraints.new("DAMPED_TRACK")
+        track.target, track.subtarget, track.head_tail = rig, f"upperarm.{side}", 1.0
+        track.influence = 0.5
         twist = rig.pose.bones[f"forearm_twist.{side}"].constraints.new("COPY_ROTATION")
         twist.target, twist.subtarget = rig, f"hand.{side}"
         twist.use_x = twist.use_z = False
@@ -118,10 +128,11 @@ def bind(body, rig):
     bpy.ops.object.parent_set(type="ARMATURE_AUTO")
     armature = next(modifier for modifier in body.modifiers if modifier.type == "ARMATURE")
     armature.use_deform_preserve_volume = True
+    refine_shoulder_weights(body, rig)
     smooth = body.modifiers.new("corrective", "CORRECTIVE_SMOOTH")
     smooth.rest_source = "ORCO"
     smooth.smooth_type = "LENGTH_WEIGHTED"
-    smooth.iterations = 6
+    smooth.iterations = 30
     smooth.factor = 0.5
     for name in EYES:
         eye = bpy.data.objects[name]
@@ -130,6 +141,53 @@ def bind(body, rig):
         eye.parent_type = "BONE"
         eye.parent_bone = "head"
         eye.matrix_world = world
+
+
+def refine_shoulder_weights(body, rig):
+    coords = np.array([vertex.co[:] for vertex in body.data.vertices])
+    count = len(coords)
+    groups = {group.name: group for group in body.vertex_groups}
+    for side, sign in (("L", 1), ("R", -1)):
+        groups.setdefault(f"shoulder.{side}", body.vertex_groups.new(name=f"shoulder.{side}"))
+    groups = {group.name: group for group in body.vertex_groups}
+    weights = {name: np.zeros(count) for name in groups}
+    for vertex in body.data.vertices:
+        for element in vertex.groups:
+            weights[body.vertex_groups[element.group].name][vertex.index] = element.weight
+    for side, sign in (("L", 1), ("R", -1)):
+        x = coords[:, 0] * sign
+        head = Vector(rig.data.bones[f"upperarm.{side}"].head_local)
+        tail = Vector(rig.data.bones[f"upperarm.{side}"].tail_local)
+        axis = np.array(tail - head)
+        length = np.linalg.norm(axis)
+        along = (coords - np.array(head)) @ (axis / length) / length
+        arm = weights[f"upperarm.{side}"] + weights[f"forearm.{side}"] * 0
+        torso_side = (x < 0.185) & (coords[:, 2] < 1.36) & (coords[:, 2] > 0.95)
+        upper_chest = coords[:, 2] > 1.2
+        moved = arm * torso_side
+        weights[f"upperarm.{side}"] -= moved
+        weights["chest"] += moved * upper_chest
+        weights["spine"] += moved * ~upper_chest
+        blend = np.clip((0.38 - along) / 0.33, 0, 1) * (x > 0.12) * (coords[:, 2] > 1.2)
+        shared = weights[f"upperarm.{side}"] * blend * 0.6
+        weights[f"upperarm.{side}"] -= shared
+        weights[f"shoulder.{side}"] += shared
+    total = sum(weights.values())
+    total[total == 0] = 1
+    for name, values in weights.items():
+        values = values / total
+        group = groups[name]
+        group.remove(list(range(count)))
+        nonzero = np.where(values > 1e-4)[0]
+        for index in nonzero:
+            group.add([int(index)], float(values[index]), "REPLACE")
+    bpy.context.view_layer.objects.active = body
+    bpy.ops.object.mode_set(mode="WEIGHT_PAINT")
+    for name in ("chest", "spine", "clavicle.L", "clavicle.R", "upperarm.L", "upperarm.R", "shoulder.L", "shoulder.R"):
+        body.vertex_groups.active_index = groups[name].index
+        bpy.ops.object.vertex_group_smooth(group_select_mode="ACTIVE", factor=0.5, repeat=4)
+    bpy.ops.object.vertex_group_normalize_all(lock_active=False)
+    bpy.ops.object.mode_set(mode="OBJECT")
 
 
 def ellipsoid_mask(coords, center, radii):
@@ -200,7 +258,7 @@ def main():
     bind(body, rig)
     paint_masks(body)
     studio(scene)
-    bpy.ops.wm.save_as_mainfile(filepath=os.path.join(WORK, "base.blend"))
+    bpy.ops.wm.save_as_mainfile(filepath=os.path.join(WORK, os.environ.get("BASE_NAME", "base.blend")))
     print("BASE_SAVED", len(body.vertex_groups))
 
 
